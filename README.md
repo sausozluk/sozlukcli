@@ -1,6 +1,13 @@
 # sozluk-cli
 saü sözlük command-line interface for n3rds
 
-## important!
+## usage
 
-> dont use this application! still under development
+```bash
+$ make
+$ cd bin
+$ nano config.json # put your token here
+$ # quit and save
+$ ./sozlukcli-linux write --topic pena --entry yeter
+$ # done!
+```
