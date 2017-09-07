@@ -10,20 +10,21 @@ import (
 // Config :
 type Config struct {
 	token string
+	slug  string
 }
 
 var config Config
 
 // NewSozluk :
 func NewSozluk(token string) bool {
-	config = Config{token: token}
+	config = Config{token: token, slug: ""}
 
 	response, err := isTokenExistReq(config.token)
 
 	done := err == nil && response.Data.IsAlive
 
 	if done {
-		fmt.Printf("Hi %s!\n", response.Data.Slug)
+		config.slug = response.Data.Slug
 	} else {
 		fmt.Printf("This token (%s) not alive!\n - Please check config.json!\n", config.token)
 	}
@@ -58,6 +59,11 @@ func CreateEntry(topic string, entry string) int {
 	}
 
 	return -1
+}
+
+// GetSlug :
+func GetSlug() string {
+	return config.slug
 }
 
 // TopicIsAlreadyExist :

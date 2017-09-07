@@ -61,7 +61,7 @@ func main() {
 					id := sozlukcli.CreateEntry(topic, entry)
 
 					if id != -1 {
-						fmt.Printf("Entry ready here http://sausozluk.net/entry/%d\n", id)
+						fmt.Printf("%s\n - http://sausozluk.net/entry/%d\n", sozlukcli.GetSlug(), id)
 					}
 				} else {
 					cli.ShowCommandHelp(c, "write")
