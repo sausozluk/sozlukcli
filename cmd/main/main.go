@@ -131,6 +131,18 @@ func main() {
 				return nil
 			},
 		},
+		{
+			Name:  "logout",
+			Usage: "Just logout",
+			Action: func(c *cli.Context) error {
+				sozlukcli.DoLogout(getToken())
+				setToken("")
+
+				fmt.Printf("- Done !\n")
+
+				return nil
+			},
+		},
 	}
 
 	app.Action = func(c *cli.Context) error {
