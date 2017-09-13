@@ -5,24 +5,49 @@ import (
 	"os"
 	"time"
 
-	"github.com/damnever/cc"
+	"github.com/kardianos/osext"
 	"github.com/sausozluk/sozlukcli"
+	"gopkg.in/ini.v1"
 	"gopkg.in/urfave/cli.v1"
 )
 
+// ConfData :
+const ConfData = `
+[sozluk]
+TOKEN=
+`
+
 func getToken() string {
-	c, _ := cc.NewConfigFromFile("config.json")
-	return c.String("token")
+	file := getCurrentDir() + "/sozluk.ini"
+
+	cfg, _ := ini.Load([]byte(ConfData), file)
+
+	token := cfg.Section("sozluk").Key("TOKEN").Value()
+
+	return token
+}
+
+func setToken(token string) {
+	file := getCurrentDir() + "/sozluk.ini"
+
+	cfg, _ := ini.Load([]byte(ConfData), file)
+
+	key := cfg.Section("sozluk").Key("TOKEN")
+
+	key.SetValue(token)
+
+	cfg.SaveTo(file)
+}
+
+func getCurrentDir() string {
+	filename, _ := osext.ExecutableFolder()
+	return filename
 }
 
 func main() {
 	app := cli.NewApp()
 
 	ready := sozlukcli.NewSozluk(getToken())
-
-	if !ready {
-		return
-	}
 
 	app.Name = "sozluk-cli"
 	app.Usage = "saü sözlük command-line interface for n3rds"
@@ -36,6 +61,7 @@ func main() {
 	}
 
 	var entry, topic string
+	var email, password string
 
 	app.Commands = []cli.Command{
 		{
@@ -57,7 +83,9 @@ func main() {
 				},
 			},
 			Action: func(c *cli.Context) error {
-				if entry != "" && topic != "" {
+				if !ready {
+					cli.ShowCommandHelp(c, "login")
+				} else if entry != "" && topic != "" {
 					id := sozlukcli.CreateEntry(topic, entry)
 
 					if id != -1 {
@@ -65,6 +93,39 @@ func main() {
 					}
 				} else {
 					cli.ShowCommandHelp(c, "write")
+				}
+
+				return nil
+			},
+		},
+		{
+			Name:    "login",
+			Aliases: []string{"l"},
+			Usage:   "Login without pain",
+			Flags: []cli.Flag{
+				cli.StringFlag{
+					Name:        "email",
+					Value:       "",
+					Usage:       "email address",
+					Destination: &email,
+				},
+				cli.StringFlag{
+					Name:        "password",
+					Value:       "",
+					Usage:       "best secret password ever",
+					Destination: &password,
+				},
+			},
+			Action: func(c *cli.Context) error {
+				if email != "" && password != "" {
+					token, error := sozlukcli.DoLogin(email, password)
+
+					if error == nil {
+						setToken(token)
+						fmt.Printf("- Auth succes :)\n")
+					}
+				} else {
+					cli.ShowCommandHelp(c, "login")
 				}
 
 				return nil

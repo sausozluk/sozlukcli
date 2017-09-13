@@ -1,6 +1,7 @@
 package sozlukcli
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
 
@@ -25,8 +26,6 @@ func NewSozluk(token string) bool {
 
 	if done {
 		config.slug = response.Data.Slug
-	} else {
-		fmt.Printf("This token (%s) not alive!\n - Please check config.json!\n", config.token)
 	}
 
 	return done
@@ -84,4 +83,24 @@ func TopicIsAlreadyExist(topic string) string {
 	}
 
 	return ""
+}
+
+// DoLogin :
+func DoLogin(email string, password string) (string, error) {
+	response, err := createSession(email, password)
+
+	done := err == nil && response.Success
+
+	if done {
+		return response.Data.Token, nil
+	}
+
+	return "", errors.New("Login Failed")
+}
+
+// DoLogout :
+func DoLogout(token string) bool {
+	deleteSession(token)
+
+	return true
 }

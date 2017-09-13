@@ -5,16 +5,11 @@ saü sözlük command-line interface for n3rds
 
 ```bash
 $ make
-$ # its done!
 ```
 
 ## usage
 
 ```bash
-$ cd bin
-$ nano config.json # put your token here
-$ # quit and save
-$ ./sozlukcli-darwin write --topic pena --entry yeter # macosx
-$ ./sozlukcli-linux write --topic pena --entry yeter # linux
-$ ./sozlukcli.exe write --topic pena --entry yeter # windows
-$ # done!
+$ sozluk login --email "ornek@email.com" --password "COKGIZLI"
+$ sozluk write --topic "pena" --entry "yeter"
+```
