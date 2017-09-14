@@ -1,10 +1,15 @@
 # sozluk-cli
 saü sözlük command-line interface for n3rds
 
-## build
+## linux-build
 
 ```bash
 $ make
+```
+
+## cross-build
+```bash
+$ make cross
 ```
 
 ## usage

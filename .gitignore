@@ -1,1 +1,4 @@
 cmd/main/main
+bin/sozluk-linux
+bin/sozluk-windows.exe
+bin/sozluk-darwin
