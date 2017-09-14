@@ -60,6 +60,11 @@ func CreateEntry(topic string, entry string) int {
 	return -1
 }
 
+// DeleteEntry :
+func DeleteEntry(ID int) {
+	deleteEntryReq(ID, config.token)
+}
+
 // GetSlug :
 func GetSlug() string {
 	return config.slug
@@ -87,7 +92,7 @@ func TopicIsAlreadyExist(topic string) string {
 
 // DoLogin :
 func DoLogin(email string, password string) (string, error) {
-	response, err := createSession(email, password)
+	response, err := createSessionReq(email, password)
 
 	done := err == nil && response.Success
 
@@ -100,7 +105,7 @@ func DoLogin(email string, password string) (string, error) {
 
 // DoLogout :
 func DoLogout(token string) bool {
-	deleteSession(token)
+	deleteSessionReq(token)
 
 	return true
 }

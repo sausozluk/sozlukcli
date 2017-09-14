@@ -51,6 +51,11 @@ type EntryCreateData struct {
 	ID int `json:"id"`
 }
 
+// EntryDeleteResponse :
+type EntryDeleteResponse struct {
+	Success bool `json:"success"`
+}
+
 // TopicCreateResponse :
 type TopicCreateResponse struct {
 	Success bool   `json:"success"`

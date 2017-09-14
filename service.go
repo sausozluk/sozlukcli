@@ -2,6 +2,7 @@ package sozlukcli
 
 import (
 	"fmt"
+	"strconv"
 
 	resty "gopkg.in/resty.v0"
 )
@@ -11,6 +12,7 @@ const (
 	isTopicExistURL         = "http://sausozluk.net/service/proxy/api/v1/search?q="
 	createTopicWithEntryURL = "http://sausozluk.net/service/proxy/api/v1/topics"
 	createEntryIntoTopicURL = "http://sausozluk.net/service/proxy/api/v1/entries"
+	deleteEntryURL          = "http://sausozluk.net/service/proxy/api/v1/entries"
 	createSessionURL        = "http://sausozluk.net/service/proxy/api/v1/sessions"
 	deleteSessionURL        = "http://sausozluk.net/service/proxy/api/v1/sessions"
 )
@@ -67,7 +69,19 @@ func createEntryIntoTopicReq(topicID string, entry string, token string) (*Entry
 	return response, err
 }
 
-func createSession(email string, password string) (*SessionCreateResponse, error) {
+func deleteEntryReq(ID int, token string) (*EntryDeleteResponse, error) {
+	resp, err := resty.R().
+		SetHeader("token", token).
+		SetHeader("Content-Type", "application/json").
+		SetResult(EntryDeleteResponse{}).
+		Delete(deleteEntryURL + "/" + strconv.Itoa(ID))
+
+	response := resp.Result().(*EntryDeleteResponse)
+
+	return response, err
+}
+
+func createSessionReq(email string, password string) (*SessionCreateResponse, error) {
 	payload := fmt.Sprintf(`{"email":"%s","password":"%s"}`, email, password)
 
 	resp, err := resty.R().
@@ -81,7 +95,7 @@ func createSession(email string, password string) (*SessionCreateResponse, error
 	return response, err
 }
 
-func deleteSession(token string) (*SessionDeleteResponse, error) {
+func deleteSessionReq(token string) (*SessionDeleteResponse, error) {
 	resp, err := resty.R().
 		SetHeader("token", token).
 		SetHeader("Content-Type", "application/json").

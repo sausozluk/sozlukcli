@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 	"time"
 
 	"github.com/kardianos/osext"
@@ -14,27 +15,28 @@ import (
 // ConfData :
 const ConfData = `
 [sozluk]
-TOKEN=
+TOKEN = 
+LASTENTRY = 
 `
 
-func getToken() string {
+func getValueFromConf(key string) string {
 	file := getCurrentDir() + "/sozluk.ini"
 
 	cfg, _ := ini.Load([]byte(ConfData), file)
 
-	token := cfg.Section("sozluk").Key("TOKEN").Value()
+	value := cfg.Section("sozluk").Key(key).Value()
 
-	return token
+	return value
 }
 
-func setToken(token string) {
+func setValueToConf(key string, value string) {
 	file := getCurrentDir() + "/sozluk.ini"
 
 	cfg, _ := ini.Load([]byte(ConfData), file)
 
-	key := cfg.Section("sozluk").Key("TOKEN")
+	keyObj := cfg.Section("sozluk").Key(key)
 
-	key.SetValue(token)
+	keyObj.SetValue(value)
 
 	cfg.SaveTo(file)
 }
@@ -47,7 +49,7 @@ func getCurrentDir() string {
 func main() {
 	app := cli.NewApp()
 
-	ready := sozlukcli.NewSozluk(getToken())
+	ready := sozlukcli.NewSozluk(getValueFromConf("TOKEN"))
 
 	app.Name = "sozluk-cli"
 	app.Usage = "saü sözlük command-line interface for n3rds"
@@ -89,6 +91,8 @@ func main() {
 					id := sozlukcli.CreateEntry(topic, entry)
 
 					if id != -1 {
+						setValueToConf("LASTENTRY", strconv.Itoa(id))
+
 						fmt.Printf("%s\n - http://sausozluk.net/entry/%d\n", sozlukcli.GetSlug(), id)
 					}
 				} else {
@@ -121,7 +125,8 @@ func main() {
 					token, error := sozlukcli.DoLogin(email, password)
 
 					if error == nil {
-						setToken(token)
+						setValueToConf("TOKEN", token)
+
 						fmt.Printf("- Auth succes :)\n")
 					}
 				} else {
@@ -135,8 +140,30 @@ func main() {
 			Name:  "logout",
 			Usage: "Just logout",
 			Action: func(c *cli.Context) error {
-				sozlukcli.DoLogout(getToken())
-				setToken("")
+				sozlukcli.DoLogout(getValueFromConf("TOKEN"))
+
+				setValueToConf("TOKEN", "")
+
+				fmt.Printf("- Done !\n")
+
+				return nil
+			},
+		},
+		{
+			Name:  "delete",
+			Usage: "Delete last entry",
+			Action: func(c *cli.Context) error {
+				lastEntry, error := strconv.Atoi(getValueFromConf("LASTENTRY"))
+
+				if error != nil {
+					fmt.Printf("- NOT Done :(\n")
+
+					return nil
+				}
+
+				sozlukcli.DeleteEntry(lastEntry)
+
+				setValueToConf("LASTENTRY", "")
 
 				fmt.Printf("- Done !\n")
 
