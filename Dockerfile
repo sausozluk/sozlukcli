@@ -1,6 +1,6 @@
 FROM centurylink/ca-certs
 
-ADD bin/sozlukcli-linux /
-ADD bin/config.json /
+ADD bin/sozluk /
+ADD bin/sozluk.ini /
 
-ENTRYPOINT ["/sozlukcli-linux"]
+ENTRYPOINT ["/sozluk"]
