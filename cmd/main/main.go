@@ -128,6 +128,8 @@ func main() {
 						setValueToConf("TOKEN", token)
 
 						fmt.Printf("- Auth succes :)\n")
+					} else {
+						fmt.Printf("- Auth Failed :/\n")
 					}
 				} else {
 					cli.ShowCommandHelp(c, "login")

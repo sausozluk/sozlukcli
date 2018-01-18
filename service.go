@@ -4,17 +4,19 @@ import (
 	"fmt"
 	"strconv"
 
-	resty "gopkg.in/resty.v0"
+	"gopkg.in/resty.v0"
 )
 
+const baseURL = "http://sausozluk.net/service/proxy/api/v1"
+
 const (
-	isTokenExistURL         = "http://sausozluk.net/service/proxy/api/v1/sessions/check"
-	isTopicExistURL         = "http://sausozluk.net/service/proxy/api/v1/search?q="
-	createTopicWithEntryURL = "http://sausozluk.net/service/proxy/api/v1/topics"
-	createEntryIntoTopicURL = "http://sausozluk.net/service/proxy/api/v1/entries"
-	deleteEntryURL          = "http://sausozluk.net/service/proxy/api/v1/entries"
-	createSessionURL        = "http://sausozluk.net/service/proxy/api/v1/sessions"
-	deleteSessionURL        = "http://sausozluk.net/service/proxy/api/v1/sessions"
+	isTokenExistURL         = baseURL + "/sessions/check"
+	isTopicExistURL         = baseURL + "/search?q="
+	createTopicWithEntryURL = baseURL + "/topics"
+	createEntryIntoTopicURL = baseURL + "/entries"
+	deleteEntryURL          = baseURL + "/entries"
+	createSessionURL        = baseURL + "/sessions"
+	deleteSessionURL        = baseURL + "/sessions"
 )
 
 func isTokenExistReq(token string) (*CheckResponse, error) {

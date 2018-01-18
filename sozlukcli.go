@@ -100,7 +100,7 @@ func DoLogin(email string, password string) (string, error) {
 		return response.Data.Token, nil
 	}
 
-	return "", errors.New("Login Failed")
+	return "", errors.New("login failed")
 }
 
 // DoLogout :

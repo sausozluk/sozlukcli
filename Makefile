@@ -11,3 +11,4 @@ cross:
 	GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -o bin/$(EXECUTABLE)-windows.exe $(TARGET)
 	GOOS=darwin  GOARCH=amd64 CGO_ENABLED=0 go build -o bin/$(EXECUTABLE)-darwin $(TARGET)
 	cp $(CONFIG) bin/sozluk.ini
+	cp bin/$(EXECUTABLE)-linux bin/$(EXECUTABLE)
